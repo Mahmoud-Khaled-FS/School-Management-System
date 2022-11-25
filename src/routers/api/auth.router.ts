@@ -9,8 +9,4 @@ routers.post('/register', validateBody(Validator.registerBody), controllers.regi
 
 routers.post('/login', validateBody(Validator.loginBody), controllers.loginHnadler);
 
-routers.get('reset-password');
-
-routers.post('confirm-reset-password');
-
 export default routers;
