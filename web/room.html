@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.socket.io/4.5.3/socket.io.min.js"
+    integrity="sha384-WPFUvHkB1aHA5TDSZi6xtDgkF0wXJcIIxXhC6h8OT8EH3fC5PWro5pWJ1THjcfEi"
+    crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+      height: 100vh;
+    }
+  </style>
+  <title>Document</title>
+</head>
+
+<body>
+  <button id="mute">Unmute</button>
+  <script>
+    const socket = io('http://localhost:3000');
+    const peer = new Peer({
+      host: 'localhost',
+      port: '3001'
+    });
+    const video = document.getElementById('video')
+    const audio = document.getElementById('audio')
+    peer.on('open', (id) => {
+      socket.emit('join-room', 'e54a9849-67fb-401f-ad15-0ccee5ca6621', "63751b48a6bab2263160ba01", id)
+    })
+    peer.on('call', (call) => {
+      call.answer()
+      const video = document.createElement('video')
+      call.on('stream', (stream) => {
+        video.srcObject = stream
+      })
+      video.addEventListener('loadedmetadata', () => {
+        video.play()
+      })
+
+      video.muted = true
+      document.getElementById('mute').onclick = () => video.muted = false
+      video.autoplay = true
+      document.body.append(video)
+    })
+  </script>
+</body>
+
+</html>
